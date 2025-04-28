@@ -16,8 +16,8 @@
       font-family: Arial, sans-serif;
     }
     #video, #canvas {
-      width: 300px;
-      height: 400px;
+      width: 1920px;
+      height: 1080px;
       object-fit: cover;
       border: 5px solid #fff;
       box-shadow: 0 0 15px rgba(0,0,0,0.3);
@@ -61,12 +61,16 @@
       <option value="warm">ألوان دافئة</option>
     </select>
     <button id="capture">التقاط الصورة</button>
+    <button id="save" style="display:none;">حفظ الصورة</button>
+    <button id="retake" style="display:none;">إعادة الالتقاط</button>
   </div>
 
   <script>
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const captureButton = document.getElementById('capture');
+    const saveButton = document.getElementById('save');
+    const retakeButton = document.getElementById('retake');
     const timerDiv = document.getElementById('timer');
     const filterSelect = document.getElementById('filter');
     const context = canvas.getContext('2d');
@@ -92,8 +96,8 @@
     });
 
     function capturePhoto() {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      canvas.width = 1920;
+      canvas.height = 1080;
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -116,7 +120,24 @@
       context.putImageData(imageData, 0, 0);
       canvas.style.display = 'block';
       video.style.display = 'none';
+      saveButton.style.display = 'inline-block';
+      retakeButton.style.display = 'inline-block';
     }
+
+    saveButton.addEventListener('click', () => {
+      const imageUrl = canvas.toDataURL();
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = 'photo.png';
+      link.click();
+    });
+
+    retakeButton.addEventListener('click', () => {
+      video.style.display = 'block';
+      canvas.style.display = 'none';
+      saveButton.style.display = 'none';
+      retakeButton.style.display = 'none';
+    });
   </script>
 
 </body>
